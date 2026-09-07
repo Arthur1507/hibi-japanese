@@ -405,7 +405,24 @@ const topics = [
   "meeting a neighbor","buying something at a market",
   "a phone call with a friend","a quiet afternoon in a café",
   "getting directions on the street","a visit to the library",
-  "watching TV at home","cooking a simple meal"
+  "watching TV at home","cooking a simple meal",
+  "a trip to the doctor","doing laundry","a day at school",
+  "planning a weekend trip","buying clothes at a shop",
+  "a rainy day at home","taking the bus to work",
+  "a birthday party","visiting a grandparent",
+  "going to the gym","a job interview",
+  "packing for a trip","a visit to a temple or shrine",
+  "feeding a pet","gardening on a Sunday",
+  "a bicycle ride","waiting for a delayed train",
+  "studying at a café","a family dinner",
+  "losing something and looking for it","a trip to the post office",
+  "watching a movie at the cinema","a conversation about hobbies",
+  "getting a haircut","a walk with a dog",
+  "making plans for the evening","a visit to a convenience store at night",
+  "talking about favorite foods","a morning jog",
+  "a text message conversation","waiting at a bus stop",
+  "buying a gift for someone","a first day at a new job",
+  "a conversation about the seasons","cleaning the house"
 ];
 
 // ── Init ───────────────────────────────────────────────────────────────
@@ -522,7 +539,14 @@ let quizAnswers = {};
 
 async function generateLesson() {
   const apiKey = localStorage.getItem(SK.apiKey);
-  const topic  = topics[Math.floor(Math.random()*topics.length)];
+  const usedKey = 'hibi_used_topics';
+  let usedTopics = JSON.parse(localStorage.getItem(usedKey) || '[]');
+  let available = topics.filter(t => !usedTopics.includes(t));
+  if (available.length === 0) { usedTopics = []; available = topics; }
+  const topic = available[Math.floor(Math.random()*available.length)];
+  usedTopics.push(topic);
+  if (usedTopics.length > 20) usedTopics.shift();
+  localStorage.setItem(usedKey, JSON.stringify(usedTopics));
 
   document.getElementById('loadingState').classList.add('visible');
   document.getElementById('contentState').innerHTML = '';
